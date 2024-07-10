@@ -1,7 +1,9 @@
 import User from '../models/userModel.js';
+import generateTokenAndSetCookie from '../utils/generateToken.js';
 
 export const logout = async(req, res) => {
     try{
+        res.cookie('jwt',"",{maxAge: 0});
         res.status(200).json({message: "User logged out successfully"});
 
     }catch{
@@ -10,6 +12,7 @@ export const logout = async(req, res) => {
     }
 
 };
+
 
 export const login = async(req, res) => {
     try{
@@ -23,7 +26,7 @@ export const login = async(req, res) => {
             return res.status(400).json({error: "Invalid password"});
         }
 
-        // generateTokenAndSetCookie(user._id, res);
+        generateTokenAndSetCookie(user._id, res);
 
         res.status(200).json({
             _id : user._id,
