@@ -1,21 +1,19 @@
-import db from '../config/database.js';
+import mongoose from 'mongoose';
 
-const createUser = async (googleId, displayName, email) => {
-  const result = await db.query(
-    `INSERT INTO users (google_id, display_name, email) VALUES ($1, $2, $3) RETURNING *`,
-    [googleId, displayName, email]
-  );
-  return result.rows[0];
-};
+const userSchema = new mongoose.Schema({
+    username:{
+        type: String,
+        required: true,
+        unique: true
+    },
+    password:{
+        type: String,
+        required: true,
+        minlength: 6
+    },
+},
+    {timestamp: true});
 
-const findUserByGoogleId = async (googleId) => {
-  const result = await db.query("SELECT * FROM users WHERE google_id = $1", [googleId]);
-  return result.rows[0];
-};
+const User = mongoose.model('User',userSchema);
 
-const findUserById = async (id) => {
-  const result = await db.query("SELECT * FROM users WHERE id = $1", [id]);
-  return result.rows[0];
-};
-
-export { createUser, findUserByGoogleId, findUserById };
+export default User;
